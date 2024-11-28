@@ -1,10 +1,12 @@
 import React from 'react';
-import {Route, Routes, Navigate} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 import {privateRoutes, publicRoutes, RouteNames} from '../router';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const AppRouter = () => {
-    const auth = true
-    const routes = auth ? privateRoutes : publicRoutes
+    const isAuth = useSelector<RootState>(state => state.auth?.isAuth)
+    const routes = isAuth ? privateRoutes : publicRoutes
     return (
         <Routes>
             {routes.map(
@@ -12,7 +14,7 @@ const AppRouter = () => {
                                 Component={route.component}/>
             )}
             <Route path={RouteNames.DEFAULT}
-                   element={<Navigate to={auth ? RouteNames.EVENT : RouteNames.LOGIN} replace />}/>
+                   element={<Navigate to={isAuth ? RouteNames.EVENT : RouteNames.LOGIN} replace/>}/>
         </Routes>
     );
 };
